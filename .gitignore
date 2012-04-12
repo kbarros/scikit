@@ -1,0 +1,10 @@
+# SBT directories
+target/
+project/boot/
+
+# Eclipse project files
+.cache
+.classpath
+.history
+.project
+.settings
