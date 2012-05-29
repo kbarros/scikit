@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.swing.JComponent;
@@ -55,15 +56,15 @@ public class Scene3D extends Scene<Gfx3D> {
 				Gfx3D g = new Gfx3D(glDrawable, Scene3D.this);
 				drawAll(g);
 			}
-			public void displayChanged(GLAutoDrawable gLDrawable, boolean modeChanged, boolean deviceChanged) {
+			public void dispose(GLAutoDrawable gLDrawable) {
 			}
 			public void init(GLAutoDrawable glDrawable) {
-				GL gl = glDrawable.getGL();
-				gl.glEnable(GL.GL_NORMALIZE);
+				GL2 gl = glDrawable.getGL().getGL2();
+				gl.glEnable(GL2.GL_NORMALIZE);
 				gl.glEnable(GL.GL_BLEND);
 				gl.glEnable(GL.GL_CULL_FACE);
 				gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-				gl.glShadeModel(GL.GL_SMOOTH);
+				gl.glShadeModel(GL2.GL_SMOOTH);
 				gl.glClearColor(1f, 1f, 1f, 0.0f);
 				gl.glLineWidth(1.0f);
 				gl.glPointSize(4.0f);

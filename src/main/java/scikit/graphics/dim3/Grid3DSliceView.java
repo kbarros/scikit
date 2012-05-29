@@ -8,12 +8,12 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 import scikit.numerics.vecmath.Quat4d;
 import scikit.numerics.vecmath.VecHelper;
 import scikit.numerics.vecmath.Vector3d;
 
-import com.sun.opengl.util.BufferUtil;
 
 public class Grid3DSliceView extends Grid3DView {
 	public int wallResolution = 128;
@@ -39,7 +39,7 @@ public class Grid3DSliceView extends Grid3DView {
 		_dim = _grid.getDimensions();
 		g.setColor(Color.WHITE);
 		
-		GL gl = g.getGL();
+		GL2 gl = g.getGL().getGL2();
 		gl.glEnable(GL.GL_TEXTURE_2D);
 		int[] textures = buildTextures(g);
 		
@@ -145,7 +145,7 @@ public class Grid3DSliceView extends Grid3DView {
 		int mr = Math.max(wr, sr);
 		int[] npix = new int[] {wr, wr, wr, wr, wr, wr, sr};
 		
-		ByteBuffer buffer = BufferUtil.newByteBuffer(mr*mr*4);
+		ByteBuffer buffer = com.jogamp.opengl.util.GLBuffers.newDirectByteBuffer(mr*mr*4);
 		for (int side = 0; side < PANELS; side++) {
 			gl.glBindTexture(GL.GL_TEXTURE_2D, textures[side]);
 			gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
@@ -196,14 +196,14 @@ class Polygon {
 		vs = res;
 	}
 	
-	public void draw(GL gl, Vector3d normal) {		
+	public void draw(GL2 gl, Vector3d normal) {
 		Vector3d t10 = new Vector3d(), t30 = new Vector3d();
 		t10.sub(t1, t0);
 		t30.sub(t3, t0);
 		double n10 = t10.dot(t10);
 		double n30 = t30.dot(t30);
 		
-		gl.glBegin(GL.GL_POLYGON);
+		gl.glBegin(GL2.GL_POLYGON);
 		gl.glNormal3d(normal.x, normal.y, normal.z);
 		for (int i = 0; i < vs.size(); i++) {
 			Vector3d v = vs.get(i);
@@ -215,8 +215,8 @@ class Polygon {
 		gl.glEnd();
 	}
 	
-	public void drawOutline(GL gl) {
-		gl.glDisable(GL.GL_LIGHTING);
+	public void drawOutline(GL2 gl) {
+		gl.glDisable(GL2.GL_LIGHTING);
 		
 		gl.glBegin(GL.GL_LINE_LOOP);
 		gl.glColor3d(0, 1, 1);
@@ -226,6 +226,6 @@ class Polygon {
 			gl.glVertex3d(0.5*v.x+0.5, 0.5*v.y+0.5, 0.5*v.z+0.5);
 		}
 		gl.glEnd();
-		gl.glEnable(GL.GL_LIGHTING);
+		gl.glEnable(GL2.GL_LIGHTING);
 	}
 }

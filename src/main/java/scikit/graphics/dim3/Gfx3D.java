@@ -6,11 +6,12 @@ import static scikit.numerics.Math2.sqr;
 import java.awt.Color;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 
-import com.sun.opengl.util.GLUT;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 import scikit.numerics.vecmath.Quat4d;
 import scikit.numerics.vecmath.VecHelper;
@@ -18,7 +19,7 @@ import scikit.util.Bounds;
 import scikit.util.Point;
 
 public class Gfx3D {
-	private final GL _gl;
+	private final GL2 _gl;
 	private final GLU _glu = new GLU();
 	private final GLUT _glut = new GLUT();
 	private final GLUquadric _gluq = _glu.gluNewQuadric();
@@ -30,13 +31,13 @@ public class Gfx3D {
 	
 	
 	public Gfx3D(GLAutoDrawable glDrawable, Scene3D scene) {
-		this._gl = glDrawable.getGL();
+		this._gl = glDrawable.getGL().getGL2();
 		_pixBds = new Bounds(0, glDrawable.getWidth(), 0, glDrawable.getHeight());
 		_viewBds = scene.viewBounds();
 		_rotation = scene.getRotation();
 	}
 	
-	public GL getGL() {
+	public GL2 getGL() {
 		return _gl;
 	}
 	
@@ -54,28 +55,28 @@ public class Gfx3D {
 	
 	public void ortho2D(Bounds bds) {
 		_gl.glDisable(GL.GL_DEPTH_TEST);
-		_gl.glDisable(GL.GL_COLOR_MATERIAL);
-		_gl.glDisable(GL.GL_LIGHTING);
+		_gl.glDisable(GL2.GL_COLOR_MATERIAL);
+		_gl.glDisable(GL2.GL_LIGHTING);
 		
 		// set the projection & modelview matrices
-		_gl.glMatrixMode(GL.GL_PROJECTION);
+		_gl.glMatrixMode(GL2.GL_PROJECTION);
 		_gl.glLoadIdentity();
 		_glu.gluOrtho2D(bds.xmin, bds.xmax, bds.ymin, bds.ymax);
-		_gl.glMatrixMode(GL.GL_MODELVIEW);
+		_gl.glMatrixMode(GL2.GL_MODELVIEW);
 		_gl.glLoadIdentity();
 	}
 	
 	public void perspective3D(Bounds bds) {
 		_gl.glEnable(GL.GL_DEPTH_TEST);
-		_gl.glEnable(GL.GL_COLOR_MATERIAL);
-		_gl.glEnable(GL.GL_LIGHTING);
-		_gl.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_TRUE);
+		_gl.glEnable(GL2.GL_COLOR_MATERIAL);
+		_gl.glEnable(GL2.GL_LIGHTING);
+		_gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_TRUE);
 		
 		// get the corner to corner distance of the view bounds cuboid
 		double len = sqrt(sqr(_viewBds.getWidth())+sqr(_viewBds.getHeight())+sqr(_viewBds.getDepth()));
 		
 		// set the projection matrix
-		_gl.glMatrixMode(GL.GL_PROJECTION);
+		_gl.glMatrixMode(GL2.GL_PROJECTION);
 		_gl.glLoadIdentity();
 		double fovY = 35;
 		double aspect = (double)_pixBds.getWidth() / _pixBds.getHeight();
@@ -84,7 +85,7 @@ public class Gfx3D {
 		_glu.gluPerspective(fovY, aspect, zNear, zFar);
 		
 		// set the modelview matrix
-		_gl.glMatrixMode(GL.GL_MODELVIEW);
+		_gl.glMatrixMode(GL2.GL_MODELVIEW);
 		_gl.glLoadIdentity();
 		initializeLights();
 		// each sequential operation multiplies the modelview transformation matrix
@@ -104,7 +105,7 @@ public class Gfx3D {
 	}
 	
 	public void drawCuboid(Bounds bds) {
-		_gl.glDisable(GL.GL_LIGHTING);
+		_gl.glDisable(GL2.GL_LIGHTING);
 		_gl.glBegin(GL.GL_LINES);
 		double[] xs = {bds.xmin, bds.xmax};
 		double[] ys = {bds.ymin, bds.ymax};
@@ -124,7 +125,7 @@ public class Gfx3D {
 			}
 		}
 		_gl.glEnd();
-		_gl.glEnable(GL.GL_LIGHTING);
+		_gl.glEnable(GL2.GL_LIGHTING);
 	}
 	
 	public void drawSphere(Point center, double radius) {
@@ -151,9 +152,9 @@ public class Gfx3D {
 	}
 	
 	private void initializeLights() {
-		_gl.glEnable(GL.GL_LIGHT1);
-		_gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, new float[]{0.2f,0.2f,0.2f,0.2f}, 0);
-		_gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, new float[]{0.9f,0.9f,0.9f,0.9f}, 0);
-		_gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, new float[]{1,0.5f,1,0}, 0);
+		_gl.glEnable(GL2.GL_LIGHT1);
+		_gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_AMBIENT, new float[]{0.2f,0.2f,0.2f,0.2f}, 0);
+		_gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, new float[]{0.9f,0.9f,0.9f,0.9f}, 0);
+		_gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, new float[]{1,0.5f,1,0}, 0);
 	}
 }

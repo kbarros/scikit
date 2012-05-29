@@ -7,19 +7,20 @@ import static java.lang.Math.sin;
 import java.awt.Color;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLJPanel;
+import javax.media.opengl.awt.GLJPanel;
 import javax.media.opengl.glu.GLU;
 
 import scikit.graphics.GLHelper;
 import scikit.util.Bounds;
 
-import com.sun.opengl.util.GLUT;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 
 public class Gfx2DGL implements Gfx2D {
-	private final GL _gl;
+	private final GL2 _gl;
 	private final GLUT _glut;
 	private final Bounds _pixBds, _viewBds;
 	private Bounds _proj;
@@ -29,7 +30,7 @@ public class Gfx2DGL implements Gfx2D {
 	
 	
 	public Gfx2DGL(GLAutoDrawable glDrawable, Scene2D scene) {
-		_gl = glDrawable.getGL();
+		_gl = glDrawable.getGL().getGL2();
 		_glut = new GLUT();
 		_pixBds = new Bounds(0, glDrawable.getWidth(), 0, glDrawable.getHeight());
 		_proj = _viewBds = scene.viewBounds();
@@ -45,10 +46,10 @@ public class Gfx2DGL implements Gfx2D {
 	
 	public void setProjection(Bounds proj) {
 		// the GL projection matrix is 2d, in units of pixels
-		_gl.glMatrixMode(GL.GL_PROJECTION);
+		_gl.glMatrixMode(GL2.GL_PROJECTION);
 		_gl.glLoadIdentity();
 		(new GLU()).gluOrtho2D(0, _pixBds.xmax, 0, _pixBds.ymax);
-		_gl.glMatrixMode(GL.GL_MODELVIEW);
+		_gl.glMatrixMode(GL2.GL_MODELVIEW);
 		_gl.glLoadIdentity();
 		// incoming points are transformed from datBds (data coordinates) 
 		// into pixBds (pixel coordinates)
@@ -63,7 +64,7 @@ public class Gfx2DGL implements Gfx2D {
 		return _pixBds.ymax * (y - _proj.ymin) / _proj.getHeight();
 	}
 	
-	private void vertex2d(GL gl, double x, double y) {
+	private void vertex2d(GL2 gl, double x, double y) {
 		gl.glVertex2d(transX(x), transY(y));
 	}
 	
@@ -109,7 +110,7 @@ public class Gfx2DGL implements Gfx2D {
 	}
 	
 	public void fillRect(double x, double y, double w, double h) {
-		_gl.glBegin(GL.GL_QUADS);
+		_gl.glBegin(GL2.GL_QUADS);
 		vertex2d(_gl, x, y);
 		vertex2d(_gl, x, y+h);
 		vertex2d(_gl, x+w, y+h);
@@ -136,7 +137,7 @@ public class Gfx2DGL implements Gfx2D {
 	}
 	
 	public void fillCircle(double x, double y, double r) {
-		_gl.glBegin(GL.GL_POLYGON);
+		_gl.glBegin(GL2.GL_POLYGON);
 		for (int i = 0; i < EDGES; i++) {
 			vertex2d(_gl, x+r*COS[i], y+r*SIN[i]);
 		}
@@ -164,10 +165,10 @@ public class Gfx2DGL implements Gfx2D {
 				glDrawable.getGL().glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 				scene.drawAll(new Gfx2DGL(glDrawable, scene));
 			}
-			public void displayChanged(GLAutoDrawable gLDrawable, boolean modeChanged, boolean deviceChanged) {
+			public void dispose(GLAutoDrawable gLDrawable) {
 			}
 			public void init(GLAutoDrawable glDrawable) {
-				GL gl = glDrawable.getGL();
+				GL2 gl = glDrawable.getGL().getGL2();
 				gl.glClearColor(1f, 1f, 1f, 0.0f);
 				gl.glEnable(GL.GL_BLEND);
 				gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);

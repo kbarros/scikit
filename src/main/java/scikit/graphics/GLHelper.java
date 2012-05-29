@@ -1,13 +1,14 @@
 package scikit.graphics;
 
-import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLJPanel;
+import javax.media.opengl.awt.GLCanvas;
+import javax.media.opengl.awt.GLJPanel;
+
 
 public class GLHelper {
 	public static GLJPanel createComponent(GLEventListener listener) {
-		GLCapabilities capabilities = new GLCapabilities();
+		GLCapabilities capabilities = new GLCapabilities(null);
 		// For some unknown reason, enabling GL "sample buffers" actually make anti-aliased lines
 		// look much worse on OS X. I guess it disables custom anti-aliasing code. It's better
 		// to use only glEnable(GL.GL_LINE_SMOOTH).
@@ -27,7 +28,7 @@ public class GLHelper {
 	public static boolean testGL() {
 		// construction of GLCanvas will throw a class-load error if native libraries are unavailable
 		new GLCanvas();
-		return new GLCapabilities().getHardwareAccelerated();
+		return new GLCapabilities(null).getHardwareAccelerated();
 	}
 
 }

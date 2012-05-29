@@ -1,6 +1,6 @@
 package scikit.graphics.dim3;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 import scikit.numerics.vecmath.Quat4d;
 
@@ -41,8 +41,8 @@ public class Grid3DSurfaceView extends Grid3DView {
 	}
 	
 	private void drawPanel(Gfx3D g, double x, double y, double z, int dir) {
-		GL gl = g.getGL();
-		gl.glBegin(GL.GL_QUADS);
+		GL2 gl = g.getGL().getGL2();
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glNormal3d(_normal[dir].x, _normal[dir].y, _normal[dir].z);
 		for (int i = 0; i < 4; i++) {
 			gl.glVertex3d(
