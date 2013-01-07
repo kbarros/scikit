@@ -107,6 +107,7 @@ public class Job {
 	public static void animate() {
 		current()._animate();
 	}
+	@SuppressWarnings("incomplete-switch")
 	private void _animate() {
 		if (Thread.currentThread() != thread) {
 			throw new IllegalThreadStateException("Job.animate() must be called from simulation thread.");

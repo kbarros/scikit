@@ -72,6 +72,7 @@ public class Array3d implements Cloneable {
 	
 	public void readFile(File file) {
 		try {
+			@SuppressWarnings("resource")
 			FileChannel channel = new FileInputStream(file).getChannel();
 			MappedByteBuffer bb = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
 			IntBuffer ib = bb.asIntBuffer();
@@ -103,6 +104,7 @@ public class Array3d implements Cloneable {
 			DoubleBuffer db = bb.asDoubleBuffer();
 			db.put(_a);
 			bb.rewind();
+			@SuppressWarnings("resource")
 			FileChannel channel = new FileOutputStream(file).getChannel();
 			channel.write(bb);
 			channel.close();

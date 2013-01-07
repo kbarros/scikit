@@ -38,6 +38,7 @@ public class Grid3D extends Scene3D {
 	private Grid3DSliceView _sliceView = new Grid3DSliceView(this);
 	private Grid3DView[] _views = new Grid3DView[] {_surfaceView, _sliceView};
 	private int _curView;
+	@SuppressWarnings("rawtypes")
 	private JComboBox _viewCombo;
 	private ColorChooser _colors = new ColorGradient();
 	private int _w, _h, _d; // width, height, depth
@@ -116,6 +117,7 @@ public class Grid3D extends Scene3D {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected JComponent createComponent(JComponent canvas) {
 		final JSlider slider = new JSlider(0, 1000, 0);
 		slider.addChangeListener(new ChangeListener() {

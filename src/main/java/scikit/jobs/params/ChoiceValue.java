@@ -18,6 +18,7 @@ public class ChoiceValue extends GuiValue {
 		return itemIndex(v) >= 0;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected JComponent createEditor() {
 		final JComboBox choice = new JComboBox(_choices);
 		
