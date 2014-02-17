@@ -56,17 +56,14 @@ public class Utilities {
 		return ret;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <T> List<T> asList(T o1) {
 		return Arrays.asList(o1);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <T> List<T> asList(T o1, T o2) {
 		return Arrays.asList(o1, o2);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <T> List<T> asList(T o1, T o2, T o3) {
 		return Arrays.asList(o1, o2, o3);
 	}
