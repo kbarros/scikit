@@ -63,6 +63,9 @@ public class Commands {
 	public static Plot replot(double[] data) {
 		return replot(new PointSet(0, 1, DoubleArray.clone(data)));
 	}
+	public static Plot plot(double[] x, double[] y) {
+	  return plot(new PointSet(x, y));
+	}
 
 	public static Grid grid(int w, int h, double[] data) {
 		Grid grid = new Grid("Grid");
